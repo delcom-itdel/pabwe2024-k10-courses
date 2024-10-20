@@ -7,25 +7,42 @@ const ActionType = {
   ADD_COURSE: "ADD_COURSE",
   DELETE_COURSE: "DELETE_COURSE",
   DETAIL_COURSE: "DETAIL_COURSE",
-  EDIT_COURSE: "EDIT_COURSE", // Menambahkan tipe aksi untuk edit course
+  EDIT_COURSE: "EDIT_COURSE",
+  RESET_ADD_COURSE: "RESET_ADD_COURSE", // Menambahkan tipe aksi untuk reset
+  SET_ERROR: "SET_ERROR"  // Menambahkan tipe aksi untuk error
 };
 
+// Aksi untuk mendapatkan semua kursus
 function getCoursesActionCreator(courses) {
   return { type: ActionType.GET_COURSES, payload: { courses } };
 }
 
-function addCourseActionCreator(status) {
-  return { type: ActionType.ADD_COURSE, payload: { status } };
+// Aksi untuk menambahkan kursus baru
+function addCourseActionCreator(success, course = null) {
+  return { type: ActionType.ADD_COURSE, payload: { success, course } };
 }
 
+// Aksi untuk mereset status penambahan kursus
+function resetAddCourse() {
+  return { type: ActionType.RESET_ADD_COURSE };
+}
+
+// Aksi untuk menangani error
+function setErrorActionCreator(error) {
+  return { type: ActionType.SET_ERROR, payload: { error } };
+}
+
+// Aksi untuk menghapus kursus
 function deleteCourseActionCreator(status) {
   return { type: ActionType.DELETE_COURSE, payload: { status } };
 }
 
+// Aksi untuk mendapatkan detail kursus
 function detailCourseActionCreator(course) {
   return { type: ActionType.DETAIL_COURSE, payload: { course } };
 }
 
+// Aksi asinkron untuk mendapatkan semua kursus
 function asyncGetCourses(is_finished) {
   return async (dispatch) => {
     dispatch(showLoading());
@@ -33,25 +50,51 @@ function asyncGetCourses(is_finished) {
       const courses = await api.getAllCourses(is_finished);
       dispatch(getCoursesActionCreator(courses));
     } catch (error) {
-      showErrorDialog(error.message);
+      dispatch(setErrorActionCreator(error.message));
     }
     dispatch(hideLoading());
   };
 }
 
-function asyncAddCourse({ title, description, cover }) { // Menambahkan cover ke parameter
+// Aksi asinkron untuk menambahkan kursus baru
+function asyncAddCourse(formData) {
   return async (dispatch) => {
     dispatch(showLoading());
-    try {
-      const courseId = await api.postAddCourse({ title, description, cover }); // Mengirim cover
-      dispatch(addCourseActionCreator(true));
-    } catch (error) {
-      showErrorDialog(error.message);
+    if (!formData.has('title') || !formData.get('title').trim()) {
+      dispatch(setErrorActionCreator("Title is required and cannot be empty."));
+      dispatch(hideLoading());
+      return;
     }
-    dispatch(hideLoading());
+    if (!formData.has('description') || !formData.get('description').trim()) {
+      dispatch(setErrorActionCreator("Description is required and cannot be empty."));
+      dispatch(hideLoading());
+      return;
+    }
+    if (!formData.has('cover')) {
+      dispatch(setErrorActionCreator("Cover image is required and cannot be empty."));
+      dispatch(hideLoading());
+      return;
+    }
+
+    try {
+      const response = await api.postAddCourse(formData);
+      const data = await response.json();
+      if (data.success) {
+        dispatch(addCourseActionCreator(true, data.course));
+        Swal.fire("Success", "Course successfully added!", "success");
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      dispatch(setErrorActionCreator(error.message));
+      Swal.fire("Error", error.message, "error");
+    } finally {
+      dispatch(hideLoading());
+    }
   };
 }
 
+// Aksi asinkron untuk menghapus kursus
 function asyncDeleteCourse(id) {
   return async (dispatch) => {
     dispatch(showLoading());
@@ -59,12 +102,13 @@ function asyncDeleteCourse(id) {
       await api.deleteCourse(id);
       dispatch(deleteCourseActionCreator(true));
     } catch (error) {
-      showErrorDialog(error.message);
+      dispatch(setErrorActionCreator(error.message));
     }
     dispatch(hideLoading());
   };
 }
 
+// Aksi asinkron untuk mendapatkan detail kursus
 function asyncDetailCourse(id) {
   return async (dispatch) => {
     dispatch(showLoading());
@@ -72,37 +116,38 @@ function asyncDetailCourse(id) {
       const course = await api.getDetailCourse(id);
       dispatch(detailCourseActionCreator(course));
     } catch (error) {
-      showErrorDialog(error.message);
+      dispatch(setErrorActionCreator(error.message));
     }
     dispatch(hideLoading());
   };
 }
 
-// Fungsi untuk mengedit course
+// Aksi asinkron untuk mengedit kursus
 export const asyncEditCourse = ({ id, title, description, cover }) => async (dispatch) => {
-  dispatch(showLoading()); // Tambahkan loading
+  dispatch(showLoading());
   try {
-    const courseId = await api.putUpdateCourse({ id, title, description, cover }); // Menyertakan cover
-    dispatch(editCourseActionCreator(courseId)); // Buat action creator untuk mengedit course
+    const courseId = await api.putUpdateCourse({ id, title, description, cover });
+    dispatch(editCourseActionCreator(courseId));
   } catch (error) {
-    console.error(error);
-    showErrorDialog(error.message);
+    dispatch(setErrorActionCreator(error.message));
   }
-  dispatch(hideLoading()); // Tambahkan hide loading
+  dispatch(hideLoading());
 };
 
-// Buat action creator untuk mengedit course
+// Aksi untuk mengedit kursus
 export const editCourseActionCreator = (courseId) => ({
   type: ActionType.EDIT_COURSE,
   payload: courseId,
 });
 
+// Mengekspor semua aksi yang dibutuhkan
 export {
   ActionType,
   getCoursesActionCreator,
   asyncGetCourses,
   addCourseActionCreator,
   asyncAddCourse,
+  resetAddCourse,  // Pastikan resetAddCourse diekspor
   deleteCourseActionCreator,
   asyncDeleteCourse,
   detailCourseActionCreator,

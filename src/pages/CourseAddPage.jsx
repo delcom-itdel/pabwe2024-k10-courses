@@ -1,45 +1,38 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  asyncAddCourse,
-  addCourseActionCreator,
-} from "../states/courses/action";
-import CourseInput from "../components/CourseInput";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2"; 
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'; 
+import CourseInput from '../components/CourseInput';
+import { asyncAddCourse } from '../states/courses/action';
 
 function CourseAddPage() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAddCourse = false } = useSelector((states) => states.courses); 
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isAddCourse) {
+  const handleAddCourse = async (formData) => {
+    try {
+      await dispatch(asyncAddCourse(formData));
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "Course berhasil ditambahkan!", // Ubah pesan untuk course
+        title: "Course successfully added!",
         showConfirmButton: false,
-        timer: 700,
+        timer: 1500,
       });
-      navigate("/"); 
-      dispatch(addCourseActionCreator(false)); 
+      navigate('/');  // Redirect ke homepage atau course list page setelah berhasil
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to add the course.',
+      });
     }
-  }, [isAddCourse, navigate, dispatch]);
-
-  const onAddCourse = ({ title, description, cover }) => {
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("cover", cover);
-    dispatch(asyncAddCourse(formData));
   };
 
   return (
     <section>
       <div className="container pt-1">
-        <CourseInput onAddCourse={onAddCourse} /> 
+        <CourseInput onAddCourse={handleAddCourse} />
       </div>
     </section>
   );

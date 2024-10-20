@@ -1,13 +1,18 @@
 const api = (() => {
   const BASE_URL = "https://public-api.delcom.org/api/v1";
   async function _fetchWithAuth(url, options = {}) {
-    return fetch(url, {
+    const response = await fetch(url, {
       ...options,
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
+        Authorization: `Bearer ${getAccessToken()}`
+      }
     });
+    
+    if (response.status === 401) { // Unauthorized
+      // Coba refresh token di sini, lalu retry request jika berhasil
+    }
+    return response;
   }
 
   function putAccessToken(token) {
@@ -16,6 +21,30 @@ const api = (() => {
 
   function getAccessToken() {
     return localStorage.getItem("accessToken");
+  }
+
+  async function postAddCourse(formData) {
+    if (!(formData instanceof FormData)) {
+      console.error("Expected FormData for postAddCourse, received:", formData);
+      throw new Error("formData is required and must be an instance of FormData.");
+    }
+
+    // Ensure FormData has all required fields
+    if (!formData.has('title') || !formData.get('title').trim()) {
+      throw new Error("Title is required and cannot be empty.");
+    }
+    if (!formData.has('description') || !formData.get('description').trim()) {
+      throw new Error("Description is required and cannot be empty.");
+    }
+    if (!formData.has('cover') || !formData.get('cover')) {
+      throw new Error("Cover image is required.");
+    }
+
+    return await _fetchWithAuth(`${BASE_URL}/courses`, {
+      method: "POST",
+      body: formData,
+
+    });
   }
 
   // API Auth => https://public-api.delcom.org/docs/1.0/api-auth
@@ -81,24 +110,7 @@ const api = (() => {
     return user;
   }
 
-  async function postAddCourse(formData) {
-    const response = await _fetchWithAuth(`${BASE_URL}/courses`, {
-      method: "POST",
-      body: formData,
-    });
 
-    const responseJson = await response.json();
-    const { success, message } = responseJson;
-    if (success !== true) {
-      throw new Error(message);
-    }
-
-    const {
-      data: { course_id },
-    } = responseJson;
-
-    return course_id;
-  }
 
   async function postChangeCoverCourse({ id, cover }) {
     const formData = new FormData();

@@ -1,53 +1,72 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import Swal from 'sweetalert2';
 
 function CourseInput({ onAddCourse, existingCourse }) {
-  const [title, setTitle] = useState(
-    existingCourse ? existingCourse.title : ""
-  );
-  const [description, setDescription] = useState(
-    existingCourse ? existingCourse.description : ""
-  );
-  const [cover, setCover] = useState(null); 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [cover, setCover] = useState(null);
+  const [preview, setPreview] = useState(null); // Untuk preview image
 
   useEffect(() => {
     if (existingCourse) {
       setTitle(existingCourse.title);
       setDescription(existingCourse.description);
-      setCover(null); 
+      setPreview(existingCourse.cover); // Tampilkan cover yang ada
+    } else {
+      setTitle('');
+      setDescription('');
+      setCover(null);
+      setPreview(null);
     }
   }, [existingCourse]);
 
-  function handleOnAddCourse(e) {
+  const handleOnAddCourse = (e) => {
     e.preventDefault();
-    if (title.trim() && description.trim() && cover) {
-   
-      onAddCourse({
-        title,
-        description,
-        cover,
+    if (!title.trim() || !description.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Title and description are required.',
       });
-    } else {
-      alert("All fields (title, description, cover) are required."); 
+      return;
     }
-  }
+    if (!existingCourse && !cover) { // Jika ini kursus baru, cover diperlukan
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Cover is required for new courses.',
+      });
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    if (cover) {
+      formData.append('cover', cover); // Tambahkan cover hanya jika ada
+    }
+  
+    onAddCourse(formData);
+  };
 
-  function handleFileChange(e) {
-    setCover(e.target.files[0]); 
-  }
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setCover(e.target.files[0]);
+      setPreview(URL.createObjectURL(e.target.files[0])); // Set preview of new cover
+    }
+  };
 
   return (
     <div className="card">
       <div className="card-body">
         <h3 className="ps-2">
-          {existingCourse ? "Edit Course" : "Buat Course"}
+          {existingCourse ? "Edit Course" : "Create New Course"}
         </h3>
         <hr />
         <form onSubmit={handleOnAddCourse}>
           <div className="mb-3">
-            <label htmlFor="inputTitle" className="form-label">
-              Judul
-            </label>
+            <label htmlFor="inputTitle" className="form-label">Judul</label>
             <input
               type="text"
               id="inputTitle"
@@ -58,12 +77,10 @@ function CourseInput({ onAddCourse, existingCourse }) {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="inputBody" className="form-label">
-              Deskripsi
-            </label>
+            <label htmlFor="inputDescription" className="form-label">Deskripsi</label>
             <textarea
               rows="5"
-              id="inputBody"
+              id="inputDescription"
               onChange={(e) => setDescription(e.target.value)}
               value={description}
               className="form-control"
@@ -71,19 +88,20 @@ function CourseInput({ onAddCourse, existingCourse }) {
             ></textarea>
           </div>
           <div className="mb-3">
-            <label htmlFor="inputCover" className="form-label">
-              Cover
-            </label>
+            <label htmlFor="inputCover" className="form-label">Cover</label>
             <input
               type="file"
               id="inputCover"
               onChange={handleFileChange}
               className="form-control"
-              accept="image/*" 
-              required 
+              accept="image/*"
+              required={!existingCourse}
             />
+            {preview && (
+              <img src={preview} alt="Preview" style={{ width: '100%', marginTop: '10px' }} />
+            )}
           </div>
-          <div className="mb-4 text-end mt-3">
+          <div className="text-end mt-3">
             <button type="submit" className="btn btn-primary">
               Simpan
             </button>
@@ -96,7 +114,11 @@ function CourseInput({ onAddCourse, existingCourse }) {
 
 CourseInput.propTypes = {
   onAddCourse: PropTypes.func.isRequired,
-  existingCourse: PropTypes.object,
+  existingCourse: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    cover: PropTypes.string
+  }),
 };
 
 export default CourseInput;
