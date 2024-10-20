@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
-import CourseItem, { courseItemShape } from "./CourseItem"; // Impor CourseItem dan bentuk datanya
+import CourseItem, { courseItemShape } from "./CourseItem";
 
 function CourseList({ courses, onDeleteCourse }) {
   return (
     <div>
       {courses.map((course) => (
-        <CourseItem
-          key={course.id} // Set key untuk setiap item agar React dapat membedakan
-          course={course} // Berikan objek course sebagai properti ke CourseItem
-          onDeleteCourse={onDeleteCourse} // Callback untuk hapus course
+        <CourseItem 
+          key={course.id} 
+          course={course} 
+          onDeleteCourse={onDeleteCourse} 
         />
       ))}
     </div>
@@ -16,8 +16,8 @@ function CourseList({ courses, onDeleteCourse }) {
 }
 
 CourseList.propTypes = {
-  courses: PropTypes.arrayOf(PropTypes.shape(courseItemShape)).isRequired, // Bentuk data courses menggunakan courseItemShape
-  onDeleteCourse: PropTypes.func.isRequired, // onDeleteCourse wajib ada dan merupakan fungsi
+  courses: PropTypes.arrayOf(PropTypes.shape(courseItemShape)).isRequired,
+  onDeleteCourse: PropTypes.func.isRequired,
 };
 
 export default CourseList;

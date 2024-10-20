@@ -8,50 +8,32 @@ function CourseInput({ onAddCourse, existingCourse }) {
   const [description, setDescription] = useState(
     existingCourse ? existingCourse.description : ""
   );
-  const [cover, setCover] = useState(null); // State untuk file cover
+  const [cover, setCover] = useState(null); 
 
-  // Memuat ulang data course saat komponen dimount atau existingCourse berubah
   useEffect(() => {
     if (existingCourse) {
       setTitle(existingCourse.title);
       setDescription(existingCourse.description);
-      setCover(null); // Reset cover hanya ketika ada existingCourse 
+      setCover(null); 
     }
   }, [existingCourse]);
 
-  // Fungsi untuk menangani pengiriman form
   function handleOnAddCourse(e) {
     e.preventDefault();
-
-    // Validasi input title, description, dan cover
     if (title.trim() && description.trim() && cover) {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("cover", cover); // Sertakan file cover dalam formData
-
-      onAddCourse(formData); // Mengirim formData termasuk file cover
+   
+      onAddCourse({
+        title,
+        description,
+        cover,
+      });
     } else {
-      alert("Semua field (judul, deskripsi, cover) wajib diisi."); // Validasi input
+      alert("All fields (title, description, cover) are required."); 
     }
   }
 
-  // Fungsi untuk menangani perubahan file cover
   function handleFileChange(e) {
-    const file = e.target.files[0];
-
-    if (file) {
-      // Validasi tipe file
-      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!allowedTypes.includes(file.type)) {
-        alert(
-          "Tipe file tidak valid. Hanya mendukung file gambar (JPEG, PNG, GIF)."
-        );
-        return;
-      }
-
-      setCover(file); // Set file cover yang dipilih jika valid
-    }
+    setCover(e.target.files[0]); 
   }
 
   return (
@@ -97,8 +79,8 @@ function CourseInput({ onAddCourse, existingCourse }) {
               id="inputCover"
               onChange={handleFileChange}
               className="form-control"
-              accept="image/*" // Hanya file gambar yang diperbolehkan
-              required // Wajib mengunggah cover
+              accept="image/*" 
+              required 
             />
           </div>
           <div className="mb-4 text-end mt-3">
@@ -113,11 +95,8 @@ function CourseInput({ onAddCourse, existingCourse }) {
 }
 
 CourseInput.propTypes = {
-  onAddCourse: PropTypes.func.isRequired, // Fungsi onAddCourse wajib ada
-  existingCourse: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }), // existingCourse opsional tapi jika ada harus memiliki title dan description
+  onAddCourse: PropTypes.func.isRequired,
+  existingCourse: PropTypes.object,
 };
 
 export default CourseInput;

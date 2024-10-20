@@ -30,7 +30,7 @@ function CourseDetailPage() {
         {error ? (
           <div className="alert alert-danger">{error}</div> // Tampilkan pesan kesalahan
         ) : detailCourse ? ( 
-          <CourseDetail course={detailCourse} />
+          <CourseDetail course={detailCourse} /> 
         ) : (
           <div>Loading...</div> // Tampilkan loading jika detailCourse belum ada
         )}

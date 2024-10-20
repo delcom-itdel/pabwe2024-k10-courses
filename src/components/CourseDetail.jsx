@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-import { courseItemShape } from "./CourseItem"; // Mengimpor shape yang sesuai
-import { postedAt } from "../utils/tools"; // Fungsi untuk menampilkan waktu
-import { FaClock } from "react-icons/fa6"; // Ikon untuk jam
+import { courseItemShape } from "./CourseItem"; 
+import { postedAt } from "../utils/tools";
+import { FaClock } from "react-icons/fa6";
 
 function CourseDetail({ course }) {
   let badgeStatus, badgeLabel;
 
-  // Menentukan status badge berdasarkan apakah course selesai atau belum
   if (course.is_finished) {
     badgeStatus = "badge bg-success text-white ms-3";
     badgeLabel = "Selesai";
@@ -20,30 +19,29 @@ function CourseDetail({ course }) {
       <div className="card-body">
         <div className="row align-items-center">
           <div className="col-12 d-flex align-items-center">
-            <h5>{course.title}</h5> {/* Menampilkan judul course */}
+            <h5>{course.title}</h5>
             <div>
-              <span className={badgeStatus}>{badgeLabel}</span>{" "}
-              {/* Status course */}
+              <span className={badgeStatus}>{badgeLabel}</span>
             </div>
           </div>
 
           <div className="col-12">
             <div className="text-sm op-5">
-              <FaClock /> {/* Ikon jam */}
-              <span className="ps-2">{postedAt(course.created_at)}</span>{" "}
-              {/* Tanggal posting */}
+              <FaClock />
+              <span className="ps-2">{postedAt(course.created_at)}</span>
             </div>
           </div>
 
           <div className="col-12">
-            {/* Menampilkan gambar cover course */}
+            
             <img
               src={course.cover} // Menggunakan gambar cover
               alt={course.title}
               className="img-fluid mt-3 mb-3" // Kelas untuk styling
             />
             <hr />
-            <p>{course.description}</p> {/* Menampilkan deskripsi course */}
+            <p>{course.description}</p>{" "}
+            
           </div>
         </div>
       </div>
@@ -52,7 +50,7 @@ function CourseDetail({ course }) {
 }
 
 CourseDetail.propTypes = {
-  course: PropTypes.shape(courseItemShape).isRequired, // Memastikan shape course sesuai dengan courseItemShape
+  course: PropTypes.shape(courseItemShape).isRequired, // Memastikan shape course
 };
 
 export default CourseDetail;

@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate untuk navigasi
+import { Link, useNavigate } from "react-router-dom";
 import { postedAt } from "../utils/tools";
-import { FaClock, FaTrash, FaPen } from "react-icons/fa6"; // Tambah icon edit (FaPen)
-import Swal from 'sweetalert2'; // Pastikan untuk mengimpor Swal jika belum
+import { FaClock, FaTrash, FaPen } from "react-icons/fa6"; 
+import Swal from 'sweetalert2'; 
 
 function CourseItem({ course, onDeleteCourse }) {
   let badgeStatus, badgeLabel;
-  const navigate = useNavigate(); // Gunakan useNavigate untuk redirect
+  const navigate = useNavigate(); 
 
   if (course.is_finished) {
     badgeStatus = "badge bg-success text-white ms-3";

@@ -10,9 +10,9 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
-import CourseAddPage from "./pages/CourseAddPage"; // Ganti TodoAddPage menjadi CourseAddPage
-import CourseDetailPage from "./pages/CourseDetailPage"; // Ganti TodoDetailPage menjadi CourseDetailPage
-import EditCoursePage from "./pages/CourseEditPAge"; // Ganti EditTodoPage menjadi EditCoursePage
+import CourseAddPage from "./pages/CourseAddPage"; 
+import CourseDetailPage from "./pages/CourseDetailPage"; 
+import EditCoursePage from "./pages/CourseEditPAge"; 
 
 function App() {
   const { authLogin = null, isPreload = false } = useSelector((states) => states);
