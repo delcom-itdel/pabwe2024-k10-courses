@@ -10,27 +10,29 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
-import CourseAddPage from "./pages/CourseAddPage"; 
-import CourseDetailPage from "./pages/CourseDetailPage"; 
+import CourseAddPage from "./pages/CourseAddPage";
+import CourseDetailPage from "./pages/CourseDetailPage";
 import EditCoursePage from "./pages/CourseEditPage"; // Fixed typo
 
 function App() {
-  const { authLogin = null, isPreload = false } = useSelector((states) => states);
+  const { authLogin = null, isPreload = false } = useSelector(
+    (states) => states
+  );
   const location = useLocation();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
-  
+
   const onAuthSignOut = () => {
     dispatch(asyncUnsetAuthLogin());
   };
-  
+
   if (isPreload) {
     return null;
   }
-  
+
   if (authLogin === null) {
     const activeRegister = location.pathname === "/register" ? "active" : "";
     const activeLogin = location.pathname !== "/register" ? "active" : "";
@@ -51,7 +53,10 @@ function App() {
                 </Link>
               </li>
               <li className="nav-item w-50 text-center">
-                <Link className={`nav-link ${activeRegister} btl`} to="/register">
+                <Link
+                  className={`nav-link ${activeRegister} btl`}
+                  to="/register"
+                >
                   Register
                 </Link>
               </li>
@@ -65,14 +70,11 @@ function App() {
       </div>
     );
   }
-  
+
   return (
     <div>
       <header className="fixed-top">
-        <Navigation
-          authLogin={authLogin}
-          onAuthSignOut={onAuthSignOut}
-        />
+        <Navigation authLogin={authLogin} onAuthSignOut={onAuthSignOut} />
         <Loading />
       </header>
       <main className="margin-main">
