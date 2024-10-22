@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { postedAt } from "../utils/tools";
-import { FaClock, FaTrash, FaPen } from "react-icons/fa6";
-import Swal from 'sweetalert2';
+import { FaClock, FaTrash, FaPen, FaUserPlus } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const courseItemShape = {
   id: PropTypes.number.isRequired,
@@ -19,11 +19,17 @@ function CourseItem({ course, onDeleteCourse }) {
     navigate(`/courses/${course.id}/edit`); // Navigasi ke halaman edit kursus
   };
 
+  const handleAddStudentClick = () => {
+    navigate(`/courses/${course.id}/add-student`); // Navigasi ke halaman add student
+  };
+
   return (
-    <div className="col-md-3"> {/* Gunakan grid system Bootstrap */}
+    <div className="col-md-3">
+      {" "}
+      {/* Gunakan grid system Bootstrap */}
       <div className="card mt-3 shadow-sm">
-        <img 
-          src={course.cover || 'https://via.placeholder.com/400x200'} // Fallback jika tidak ada cover
+        <img
+          src={course.cover || "https://via.placeholder.com/400x200"} // Fallback jika tidak ada cover
           alt={course.title}
           className="card-img-top"
           style={{ height: "200px", objectFit: "cover" }}
@@ -40,16 +46,9 @@ function CourseItem({ course, onDeleteCourse }) {
           </p>
         </div>
         <div className="card-footer d-flex justify-content-between">
-          <button 
-            type="button" 
-            className="btn btn-sm btn-outline-primary" 
-            onClick={handleEditClick}
-          >
-            <FaPen /> Edit
-          </button>
-          <button 
-            type="button" 
-            className="btn btn-sm btn-outline-danger" 
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-danger"
             onClick={() => {
               Swal.fire({
                 title: "Hapus Course",
@@ -65,6 +64,13 @@ function CourseItem({ course, onDeleteCourse }) {
             }}
           >
             <FaTrash /> Hapus
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-primary"
+            onClick={handleAddStudentClick}
+          >
+            <FaUserPlus /> Add Student
           </button>
         </div>
       </div>

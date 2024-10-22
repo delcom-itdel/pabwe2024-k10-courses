@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import CourseAddPage from "./pages/CourseAddPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
+import AddStudentPage from "./pages/AddStudentPage"; // Import AddStudentPage
 
 function App() {
   const { authLogin = null, isPreload = false } = useSelector(
@@ -86,6 +87,11 @@ function App() {
             <Route path="/users/me" element={<ProfilePage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/courses/add" element={<CourseAddPage />} />
+            <Route
+              path="/courses/:id/add-student"
+              element={<AddStudentPage />}
+            />{" "}
+            {/* Route untuk AddStudentPage */}
           </Routes>
         </main>
       </div>

@@ -6,10 +6,10 @@ const api = (() => {
       ...options,
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${getAccessToken()}`
-      }
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
     });
-    
+
     return response;
   }
 
@@ -33,24 +33,25 @@ const api = (() => {
   async function postAddCourse(formData) {
     if (!(formData instanceof FormData)) {
       console.error("Expected FormData for postAddCourse, received:", formData);
-      throw new Error("formData is required and must be an instance of FormData.");
+      throw new Error(
+        "formData is required and must be an instance of FormData."
+      );
     }
 
     // Ensure FormData has all required fields
-    if (!formData.has('title') || !formData.get('title').trim()) {
+    if (!formData.has("title") || !formData.get("title").trim()) {
       throw new Error("Title is required and cannot be empty.");
     }
-    if (!formData.has('description') || !formData.get('description').trim()) {
+    if (!formData.has("description") || !formData.get("description").trim()) {
       throw new Error("Description is required and cannot be empty.");
     }
-    if (!formData.has('cover') || !formData.get('cover')) {
+    if (!formData.has("cover") || !formData.get("cover")) {
       throw new Error("Cover image is required.");
     }
 
     return await _fetchWithAuth(`${BASE_URL}/courses`, {
       method: "POST",
       body: formData,
-
     });
   }
 
@@ -116,8 +117,6 @@ const api = (() => {
 
     return user;
   }
-
-
 
   async function postChangeCoverCourse({ id, cover }) {
     const formData = new FormData();
@@ -205,7 +204,7 @@ const api = (() => {
     return message;
   }
 
-  async function postAddStudent({ id }) {
+  async function postAddStudent({ id, student_id }) {
     const response = await _fetchWithAuth(
       `${BASE_URL}/courses/${id}/students`,
       {
@@ -213,6 +212,9 @@ const api = (() => {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          student_id,
+        }),
       }
     );
 
