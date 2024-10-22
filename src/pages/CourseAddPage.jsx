@@ -1,38 +1,47 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; 
-import CourseInput from '../components/CourseInput';
-import { asyncAddCourse } from '../states/courses/action';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  asyncAddCourse,
+  addCourseActionCreator,
+} from "../states/courses/action";
+import CourseInput from "../components/CourseInput";
+import { useNavigate } from "react-router-dom";
 
 function CourseAddPage() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleAddCourse = async (formData) => {
-    try {
-      await dispatch(asyncAddCourse(formData));
+  const { isAddCourse = false } = useSelector((states) => states);
+
+  useEffect(() => {
+    if (isAddCourse) {
+      // eslint-disable-next-line no-undef
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: "Course successfully added!",
         showConfirmButton: false,
-        timer: 1500,
+        timer: 700,
       });
-      navigate('/');  // Redirect ke homepage atau course list page setelah berhasil
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Failed to add the course.',
-      });
+      navigate("/");
+      dispatch(addCourseActionCreator(false));
     }
+  }, [isAddCourse, navigate, dispatch]);
+
+  const onAddCourse = ({ cover, title, description }) => {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    if (cover) {
+      formData.append("cover", cover); // Add the cover image
+    }
+
+    dispatch(asyncAddCourse(formData)); // Dispatch formData instead of the object
   };
 
   return (
     <section>
       <div className="container pt-1">
-        <CourseInput onAddCourse={handleAddCourse} />
+        <CourseInput onAddCourse={onAddCourse} />
       </div>
     </section>
   );

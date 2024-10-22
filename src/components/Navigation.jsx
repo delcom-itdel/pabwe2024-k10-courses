@@ -7,11 +7,15 @@ function Navigation({ authLogin, onAuthSignOut }) {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            Course App
-          </Link>
+      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#162623', fontFamily: 'Arial, sans-serif' }}>
+        <div className="container-fluid ">
+          <h1>
+            <Link className="navbar-brand" to="/" 
+            style={{ marginLeft: '20px', fontFamily: 'Arial, sans-serif', fontSize: '24px', fontWeight: 'bold' }}
+            >
+              By-Course
+            </Link>
+          </h1>
           <button
             className="navbar-toggler"
             type="button"
@@ -31,8 +35,9 @@ function Navigation({ authLogin, onAuthSignOut }) {
                 <Link
                   className="btn btn-light btn-sm text-dark"
                   to="/courses/add"
+                  style={{ backgroundColor: '#F0F5F7', color: 'black', fontFamily: 'Arial, sans-serif', marginTop: '10px' }}
                 >
-                  <FaPlus /> Buat Course
+                  <FaPlus /> Tambah Course
                 </Link>
               </li>
 

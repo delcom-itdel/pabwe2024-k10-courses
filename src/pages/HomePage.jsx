@@ -11,14 +11,15 @@ function HomePage() {
   const { courses = [], isDeleteCourse = false } = useSelector(
     (states) => states
   );
-  const queryParams = new URLSearchParams(location.search);
-  const is_finished = queryParams.get("is_finished") || "";
+
+  const is_me = 1;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (isDeleteCourse) {
+      // eslint-disable-next-line no-undef
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: "Course berhasil dihapus!",
         showConfirmButton: false,
@@ -26,8 +27,8 @@ function HomePage() {
       });
       dispatch(deleteCourseActionCreator(false));
     }
-    dispatch(asyncGetCourses(is_finished));
-  }, [dispatch, isDeleteCourse, is_finished]);
+    dispatch(asyncGetCourses(is_me));
+  }, [dispatch, isDeleteCourse]);
 
   const onDeleteCourse = (id) => {
     dispatch(asyncDeleteCourse(id));
@@ -44,4 +45,5 @@ function HomePage() {
     </section>
   );
 }
+
 export default HomePage;

@@ -1,6 +1,6 @@
 import { ActionType } from "./action";
-function isUserChangePhotoReducer(isUserChangePhoto = false, 
-  action = {}) {
+
+function isUserChangePhotoReducer(isUserChangePhoto = false, action = {}) {
   switch (action.type) {
     case ActionType.SET_IS_USER_CHANGE_PHOTO:
       return action.payload.isUserChangePhoto;
@@ -8,4 +8,5 @@ function isUserChangePhotoReducer(isUserChangePhoto = false,
       return isUserChangePhoto;
   }
 }
+
 export default isUserChangePhotoReducer;

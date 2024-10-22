@@ -12,12 +12,12 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import CourseAddPage from "./pages/CourseAddPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
-import EditCoursePage from "./pages/CourseEditPage"; // Fixed typo
 
 function App() {
   const { authLogin = null, isPreload = false } = useSelector(
     (states) => states
   );
+
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -36,6 +36,7 @@ function App() {
   if (authLogin === null) {
     const activeRegister = location.pathname === "/register" ? "active" : "";
     const activeLogin = location.pathname !== "/register" ? "active" : "";
+
     return (
       <div>
         <header className="fixed-top">
@@ -44,7 +45,7 @@ function App() {
         <div className="w-300px mx-auto mt-5">
           <div className="card shadow-sm">
             <div className="text-center py-2">
-              <h2>Forum App</h2>
+              <h2>D E L T A</h2>
             </div>
             <ul className="nav nav-pills mb-3">
               <li className="nav-item w-50 text-center">
@@ -62,7 +63,7 @@ function App() {
               </li>
             </ul>
             <Routes>
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/*" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
             </Routes>
           </div>
@@ -72,22 +73,23 @@ function App() {
   }
 
   return (
-    <div>
-      <header className="fixed-top">
-        <Navigation authLogin={authLogin} onAuthSignOut={onAuthSignOut} />
-        <Loading />
-      </header>
-      <main className="margin-main">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/users/me" element={<ProfilePage />} />
-          <Route path="/courses/:id" element={<CourseDetailPage />} />
-          <Route path="/courses/edit/:id" element={<EditCoursePage />} />
-          <Route path="/courses/add" element={<CourseAddPage />} />
-          <Route path="/*" element={<NotFoundPage />} />
-        </Routes>
-      </main>
-    </div>
+    <>
+      <div>
+        <header className="fixed-top">
+          <Navigation authLogin={authLogin} onAuthSignOut={onAuthSignOut} />
+          <Loading />
+        </header>
+        <main className="margin-main">
+          <Routes>
+            <Route path="/*" element={<NotFoundPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/users/me" element={<ProfilePage />} />
+            <Route path="/courses/:id" element={<CourseDetailPage />} />
+            <Route path="/courses/add" element={<CourseAddPage />} />
+          </Routes>
+        </main>
+      </div>
+    </>
   );
 }
 

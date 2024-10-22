@@ -3,16 +3,15 @@ import CourseItem, { courseItemShape } from "./CourseItem";
 
 function CourseList({ courses, onDeleteCourse }) {
   return (
-    <div>
-      {courses.map((course) => (
-        <CourseItem 
-          key={course.id} 
-          course={course} 
-          onDeleteCourse={onDeleteCourse} 
-        />
-      ))}
+    <div className="container">
+      <div className="row"> {/* Baris untuk grid system */}
+        {courses.map((course) => (
+          <CourseItem key={course.id} course={course} onDeleteCourse={onDeleteCourse} />
+        ))}
+      </div>
     </div>
   );
+  
 }
 
 CourseList.propTypes = {

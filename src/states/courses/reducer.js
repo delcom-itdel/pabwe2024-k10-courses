@@ -1,37 +1,32 @@
 import { ActionType } from "./action";
 
-// Reducer untuk mengelola daftar kursus
 function coursesReducer(courses = [], action = {}) {
   switch (action.type) {
     case ActionType.GET_COURSES:
       return action.payload.courses;
-    case ActionType.ADD_COURSE:
-      if (action.payload.course) { // Menambahkan kursus baru hanya jika tersedia
-        return [...courses, action.payload.course];
-      }
-      return courses;
-    case ActionType.EDIT_COURSE:
-      return courses.map(course =>
-        course.id === action.payload.courseId
-          ? { ...course, ...action.payload.updatedCourse }
-          : course
+
+    case ActionType.UPDATE_COURSE:
+      return courses.map((course) =>
+        course.id === action.payload.course.id ? action.payload.course : course
       );
+
+    case ActionType.DELETE_COURSE:
+      return courses.filter((course) => course.id !== action.payload.id);
+
     default:
       return courses;
   }
 }
 
-// Reducer untuk mengelola status penambahan kursus
 function isAddCourseReducer(status = false, action = {}) {
   switch (action.type) {
     case ActionType.ADD_COURSE:
-      return action.payload.success; // Menggunakan success flag dari payload
+      return action.payload.status;
     default:
       return status;
   }
 }
 
-// Reducer untuk mengelola status penghapusan kursus
 function isDeleteCourseReducer(status = false, action = {}) {
   switch (action.type) {
     case ActionType.DELETE_COURSE:
@@ -41,7 +36,6 @@ function isDeleteCourseReducer(status = false, action = {}) {
   }
 }
 
-// Reducer untuk menangani detail kursus
 function detailCourseReducer(course = null, action = {}) {
   switch (action.type) {
     case ActionType.DETAIL_COURSE:
@@ -51,25 +45,88 @@ function detailCourseReducer(course = null, action = {}) {
   }
 }
 
-// Reducer untuk mengelola status pengeditan kursus
-function isEditCourseReducer(status = false, action = {}) {
+function studentsReducer(students = [], action = {}) {
   switch (action.type) {
-    case ActionType.EDIT_COURSE:
-      return action.payload.status; // Menggunakan status dari payload
+    case ActionType.ADD_STUDENT:
+      return [...students, action.payload.student];
+
+    case ActionType.DELETE_STUDENT:
+      return students.filter((student) => student.id !== action.payload.id);
+
+    case ActionType.UPDATE_STUDENT:
+      return students.map((student) =>
+        student.id === action.payload.student.id
+          ? action.payload.student
+          : student
+      );
+
+    default:
+      return students;
+  }
+}
+
+function isAddStudentReducer(status = false, action = {}) {
+  switch (action.type) {
+    case ActionType.ADD_STUDENT:
+      return action.payload.status;
     default:
       return status;
   }
 }
 
-// Reducer untuk mengelola error
-function errorReducer(error = null, action = {}) {
+function isDeleteStudentReducer(status = false, action = {}) {
   switch (action.type) {
-    case ActionType.SET_ERROR:
-      return action.payload.error;
-    case ActionType.CLEAR_ERROR:
-      return null;
+    case ActionType.DELETE_STUDENT:
+      return action.payload.status;
     default:
-      return error;
+      return status;
+  }
+}
+
+function contentsReducer(contents = [], action = {}) {
+  switch (action.type) {
+    case ActionType.ADD_CONTENT:
+      return [...contents, action.payload.content];
+
+    case ActionType.DELETE_CONTENT:
+      return contents.filter((content) => content.id !== action.payload.id);
+
+    case ActionType.UPDATE_CONTENT:
+      return contents.map((content) =>
+        content.id === action.payload.content.id
+          ? action.payload.content
+          : content
+      );
+
+    default:
+      return contents;
+  }
+}
+
+function isAddContentReducer(status = false, action = {}) {
+  switch (action.type) {
+    case ActionType.ADD_CONTENT:
+      return action.payload.status;
+    default:
+      return status;
+  }
+}
+
+function isDeleteContentReducer(status = false, action = {}) {
+  switch (action.type) {
+    case ActionType.DELETE_CONTENT:
+      return action.payload.status;
+    default:
+      return status;
+  }
+}
+
+function detailContentReducer(content = null, action = {}) {
+  switch (action.type) {
+    case ActionType.DETAIL_CONTENT:
+      return action.payload.content;
+    default:
+      return content;
   }
 }
 
@@ -78,6 +135,11 @@ export {
   isAddCourseReducer,
   isDeleteCourseReducer,
   detailCourseReducer,
-  isEditCourseReducer,
-  errorReducer 
+  studentsReducer,
+  isAddStudentReducer,
+  isDeleteStudentReducer,
+  contentsReducer,
+  isAddContentReducer,
+  isDeleteContentReducer,
+  detailContentReducer,
 };

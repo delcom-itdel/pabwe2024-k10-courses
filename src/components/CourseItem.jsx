@@ -1,100 +1,76 @@
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { postedAt } from "../utils/tools";
-import { FaClock, FaTrash, FaPen } from "react-icons/fa6"; 
-import Swal from 'sweetalert2'; 
+import { FaClock, FaTrash, FaPen } from "react-icons/fa6";
+import Swal from 'sweetalert2';
+
+const courseItemShape = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  cover: PropTypes.string,
+  description: PropTypes.string,
+  created_at: PropTypes.string.isRequired,
+};
 
 function CourseItem({ course, onDeleteCourse }) {
-  let badgeStatus, badgeLabel;
-  const navigate = useNavigate(); 
+  const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi
 
-  if (course.is_finished) {
-    badgeStatus = "badge bg-success text-white ms-3";
-    badgeLabel = "Selesai";
-  } else {
-    badgeStatus = "badge bg-warning text-dark ms-3";
-    badgeLabel = "Belum Selesai";
-  }
+  const handleEditClick = () => {
+    navigate(`/courses/${course.id}/edit`); // Navigasi ke halaman edit kursus
+  };
 
   return (
-    <div className="card mt-3">
-      <div className="card-body">
-        <div className="row align-items-center">
-          <div className="col-8 d-flex">
-            {/* Menampilkan gambar cover course */}
-            <img
-              src={course.cover} // Gambar cover
-              alt={course.title}
-              className="img-fluid me-3"
-              style={{ width: "100px", height: "auto", objectFit: "cover" }} // Gaya untuk gambar
-            />
-            <h5>
-              <Link to={`/courses/${course.id}`} className="text-primary">
-                {course.title}
-              </Link>
-            </h5>
-            <div>
-              <span className={badgeStatus}>{badgeLabel}</span>
-            </div>
-          </div>
-
-          <div className="col-4 text-end">
-            {/* Tombol Edit */}
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-primary me-2"
-              onClick={() => navigate(`/courses/${course.id}/edit`)} // Menavigasi ke halaman edit
-            >
-              <FaPen /> Edit
-            </button>
-
-            {/* Tombol Hapus */}
-            <button
-              type="button"
-              onClick={() => {
-                Swal.fire({
-                  title: "Hapus Course",
-                  text: `Apakah kamu yakin ingin mehapus course: ${course.title}?`,
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonText: "Ya, Tetap Hapus",
-                  customClass: {
-                    confirmButton: "btn btn-danger me-3 mb-4",
-                    cancelButton: "btn btn-secondary me-3 mb-4",
-                  },
-                  buttonsStyling: false,
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    onDeleteCourse(course.id);
-                  }
-                });
-              }}
-              className="btn btn-sm btn-outline-danger"
-            >
-              <FaTrash /> Hapus
-            </button>
-          </div>
-
-          <div className="col-12">
-            <div className="text-sm op-5">
-              <FaClock />
-              <span className="ps-2">{postedAt(course.created_at)}</span>
-            </div>
-          </div>
+    <div className="col-md-3"> {/* Gunakan grid system Bootstrap */}
+      <div className="card mt-3 shadow-sm">
+        <img 
+          src={course.cover || 'https://via.placeholder.com/400x200'} // Fallback jika tidak ada cover
+          alt={course.title}
+          className="card-img-top"
+          style={{ height: "200px", objectFit: "cover" }}
+        />
+        <div className="card-body">
+          <h5 className="card-title">
+            <Link to={`/courses/${course.id}`} className="text-primary">
+              {course.title}
+            </Link>
+          </h5>
+          <p className="card-text">{course.description}</p>
+          <p className="text-muted">
+            <FaClock /> Posted on: {postedAt(course.created_at)}
+          </p>
+        </div>
+        <div className="card-footer d-flex justify-content-between">
+          <button 
+            type="button" 
+            className="btn btn-sm btn-outline-primary" 
+            onClick={handleEditClick}
+          >
+            <FaPen /> Edit
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-sm btn-outline-danger" 
+            onClick={() => {
+              Swal.fire({
+                title: "Hapus Course",
+                text: `Apakah kamu yakin ingin mehapus course: ${course.title}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Tetap Hapus",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  onDeleteCourse(course.id);
+                }
+              });
+            }}
+          >
+            <FaTrash /> Hapus
+          </button>
         </div>
       </div>
     </div>
   );
 }
-
-const courseItemShape = {
-  id: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  is_finished: PropTypes.number.isRequired,
-  cover: PropTypes.string, // Menambahkan properti cover
-  created_at: PropTypes.string.isRequired,
-  updated_at: PropTypes.string.isRequired,
-};
 
 CourseItem.propTypes = {
   course: PropTypes.shape(courseItemShape).isRequired,

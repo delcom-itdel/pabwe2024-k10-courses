@@ -1,43 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CourseDetail from "../components/CourseDetail"; // Mengimpor komponen CourseDetail
-import api from "../utils/api"; // Mengimpor API module
+import { useSelector, useDispatch } from "react-redux";
+import { asyncDetailCourse, asyncUpdateCourse } from "../states/courses/action";
+import CourseDetail from "../components/CourseDetail";
 
 function CourseDetailPage() {
   const { id } = useParams();
-  const [detailCourse, setDetailCourse] = useState(null); // State untuk menyimpan detail course
-  const [error, setError] = useState(null); // State untuk error
-  const [loading, setLoading] = useState(true); // State untuk loading indicator
+
+  const { detailCourse } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchCourseDetail = async () => {
-      try {
-        setLoading(true); // Mulai loading
-        // Memanggil API untuk mendapatkan detail course
-        const course = await api.getDetailCourse(id);
-        setDetailCourse(course); // Set detail course jika berhasil
-      } catch (error) {
-        setError(error.message); // Set pesan kesalahan jika gagal
-      } finally {
-        setLoading(false); // Selesai loading
-      }
-    };
-
     if (id) {
-      fetchCourseDetail();
+      dispatch(asyncDetailCourse(id));
     }
-  }, [id]);
+  }, [id, dispatch]);
+
+  const handleEditCourse = (id, title, description) => {
+    dispatch(asyncUpdateCourse(id, title, description));
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil mengedit course!",
+      showConfirmButton: false,
+      timer: 1200,
+    });
+  };
 
   return (
     <section>
       <div className="container pt-1">
-        {loading ? (
-          <div>Loading...</div> // Tampilkan loading jika masih proses
-        ) : error ? (
-          <div className="alert alert-danger">{error}</div> // Tampilkan pesan kesalahan
-        ) : (
-          detailCourse && <CourseDetail course={detailCourse} /> // Tampilkan detail course jika data ada
-        )}
+        {detailCourse != null ? (
+          <CourseDetail course={detailCourse} onEditCourse={handleEditCourse} />
+        ) : null}
       </div>
     </section>
   );

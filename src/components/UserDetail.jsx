@@ -14,7 +14,9 @@ function UserDetail({ authLogin, onUserChangePhoto }) {
     fileInputRef.current.click();
   };
   return (
-    <div id={authLogin.id} className="card">
+    <div id={authLogin.id} className="card"
+      style={{backgroundColor:'#577877', margin:'100px'}}
+    >
       {" "}
       <div className="card-body">
         {" "}
@@ -28,17 +30,20 @@ function UserDetail({ authLogin, onUserChangePhoto }) {
                 {" "}
                 <img
                   className="rounded-circle"
-                  width={76}
-                  height={76}
+                  width={90}
+                  height={90}
                   src={authLogin.photo}
                 />{" "}
               </div>{" "}
               <div className="ms-3">
                 {" "}
-                <h3 className="text-primary"> {authLogin.name} </h3>
+                <h2 
+                style={{color : 'white' }}
+                > {authLogin.name} </h2>
                 <button
                   className="btn btn-sm btn-outline-primary"
                   onClick={handleUploadClick}
+                  style={{ borderColor: 'black', borderWidth: '3px',color: '#F0F5F7', backgroundColor: '#577877', padding: '10px'}}
                 >
                   {" "}
                   <FaUpload /> Ubah Photo Profile{" "}
@@ -55,7 +60,9 @@ function UserDetail({ authLogin, onUserChangePhoto }) {
             <hr />{" "}
             <table className="table table-bordered">
               {" "}
-              <tbody>
+              <tbody
+               style={{color:'white'}}
+              >
                 {" "}
                 <tr>
                   {" "}

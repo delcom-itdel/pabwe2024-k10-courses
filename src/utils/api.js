@@ -1,5 +1,6 @@
 const api = (() => {
   const BASE_URL = "https://public-api.delcom.org/api/v1";
+
   async function _fetchWithAuth(url, options = {}) {
     const response = await fetch(url, {
       ...options,
@@ -9,10 +10,16 @@ const api = (() => {
       }
     });
     
-    if (response.status === 401) { // Unauthorized
-      // Coba refresh token di sini, lalu retry request jika berhasil
-    }
     return response;
+  }
+
+  async function getDetailCourse(id) {
+    const response = await _fetchWithAuth(`${BASE_URL}/courses/${id}`);
+    const responseJson = await response.json();
+    if (!responseJson.success) {
+      throw new Error(responseJson.message);
+    }
+    return responseJson.data.course; // Mengembalikan detail kursus
   }
 
   function putAccessToken(token) {
@@ -143,12 +150,10 @@ const api = (() => {
     });
 
     const responseJson = await response.json();
-    const { success, message } = responseJson;
-    if (success !== true) {
-      throw new Error(message);
+    if (!responseJson.success) {
+      throw new Error(responseJson.message);
     }
-
-    return message;
+    return responseJson.message;
   }
 
   async function getAllCourses(is_me) {
