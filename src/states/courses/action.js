@@ -145,11 +145,11 @@ function changeContentStatusActionCreator(content) {
 }
 
 // Async Functions
-function asyncGetCourses() {
+function asyncGetCourses(is_me) {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const courses = await api.getAllCourses();
+      const courses = await api.getAllCourses();//is_me untuk milik sendiri
       dispatch(getCoursesActionCreator(courses));
     } catch (error) {
       showErrorDialog(error.message);

@@ -20,7 +20,7 @@ function CourseItem({ course, onDeleteCourse }) {
   const handleAccessCourse = async () => {
     try {
       //const response = await api.postAddStudent({ id: course.id });
-      navigate(`/courses/${course.id}/contents`);
+      navigate(`/courses/${course.id}/students`);
     } catch (error) {
       Swal.fire("Error", "Failed to access the course.", "error");
     }

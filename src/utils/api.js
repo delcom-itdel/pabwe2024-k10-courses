@@ -337,25 +337,25 @@ const api = (() => {
     return content;
   }
 
-  async function deleteContent(id) {
-    const response = await _fetchWithAuth(
-      `${BASE_URL}/courses/-/contents/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const responseJson = await response.json();
-    const { success, message } = responseJson;
-    if (success !== true) {
-      throw new Error(message);
+ async function deleteContent(id) {
+  const response = await _fetchWithAuth(
+    `${BASE_URL}/courses/-/contents/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     }
+  );
 
-    return message;
+  const responseJson = await response.json();
+  const { success, message } = responseJson;
+  if (success !== true) {
+    throw new Error(message);
   }
+
+  return message;
+}
 
   async function postChangeContentStatus({ id, status }) {
     const response = await _fetchWithAuth(

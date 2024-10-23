@@ -22,7 +22,7 @@ function AddContentForm({ courseId, onContentAdded }) {
   return (
     <form onSubmit={handleSubmit} className="add-content-form">
       <div className="form-group">
-        <label htmlFor="title">Ti tle</label>
+        <label htmlFor="title">Title</label>
         <input
           type="text"
           className="form-control"

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { courseItemShape } from "./CourseItem";
 import { postedAt } from "../utils/tools";
 import { FaClock, FaPenToSquare, FaUpload } from "react-icons/fa6";
+import Swal from "sweetalert2";
 import api from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncDetailCourse } from "../states/courses/action";
@@ -18,6 +19,7 @@ function CourseDetail({ course, onEditCourse }) {
   );
   const [previewCover, setPreviewCover] = useState(course?.cover || null); // Default to existing cover
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for saving changes
 
   const fileInputRef = useRef(null);
 
@@ -63,6 +65,40 @@ function CourseDetail({ course, onEditCourse }) {
     fileInputRef.current.click();
   };
 
+  // Fungsi untuk toggle edit mode
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  // Fungsi untuk menyimpan perubahan
+  const handleSaveClick = async () => {
+    setIsLoading(true);
+    try {
+      await api.putUpdateCourse({
+        id: course.id,
+        title: editedTitle,
+        description: editedDescription,
+      });
+      setIsEditing(false);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Course details updated successfully!",
+      }).then(() => {
+        window.location.reload(); // Tambahkan ini untuk refresh otomatis
+      });
+    } catch (error) {
+      console.error("Error updating course:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update course details. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSaveChanges = () => {
     onEditCourse(course.id, editedTitle, editedDescription);
     setIsEditing(false);
@@ -70,7 +106,7 @@ function CourseDetail({ course, onEditCourse }) {
 
   return (
     <div className="card mt-3">
-      <div className="card-body" style={{backgroundColor:'#F0F5F7', color:'black'}}>
+      <div className="card-body" style={{ backgroundColor: "#F0F5F7", color: "black" }}>
         {/* Flexbox for Centering the Image */}
         <div
           style={{
@@ -108,7 +144,7 @@ function CourseDetail({ course, onEditCourse }) {
         </div>
 
         {/* Course Details */}
-        <div className="row align-items-center " >
+        <div className="row align-items-center ">
           <div className="col-12">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
@@ -121,10 +157,10 @@ function CourseDetail({ course, onEditCourse }) {
                   className="btn me-2"
                   onClick={handleUploadClick}
                   style={{
-                    borderColor: 'black', 
-                    borderWidth: '3px',
-                    color: '#F0F5F7', 
-                    backgroundColor: '#577877'
+                    borderColor: "black",
+                    borderWidth: "3px",
+                    color: "#F0F5F7",
+                    backgroundColor: "#577877",
                   }}
                 >
                   <FaUpload /> {isUploading ? "Uploading..." : "Update Cover"}
@@ -141,16 +177,16 @@ function CourseDetail({ course, onEditCourse }) {
                 {/* "Edit" Button */}
                 <button
                   type="button"
-                  onClick={() => setIsEditing((prevState) => !prevState)}
+                  onClick={handleEditClick}
                   className="btn btn-sm "
                   style={{
-                    borderColor: 'black', 
-                    borderWidth: '3px',
-                    color: '#F0F5F7', 
-                    backgroundColor: '#577877',
-                    padding:'7px',
-                    paddingRight:'10px',
-                    paddingLeft:'10px'
+                    borderColor: "black",
+                    borderWidth: "3px",
+                    color: "#F0F5F7",
+                    backgroundColor: "#577877",
+                    padding: "7px",
+                    paddingRight: "10px",
+                    paddingLeft: "10px",
                   }}
                 >
                   <FaPenToSquare /> {isEditing ? "Cancel Edit" : "Edit"}
@@ -198,9 +234,10 @@ function CourseDetail({ course, onEditCourse }) {
                   <div className="d-flex justify-content-end">
                     <button
                       className="btn btn-primary"
-                      onClick={handleSaveChanges}
+                      onClick={handleSaveClick} // Save changes when clicked
+                      disabled={isLoading}
                     >
-                      Save
+                      {isLoading ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </div>
