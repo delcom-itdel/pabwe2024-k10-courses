@@ -12,12 +12,20 @@ const courseItemShape = {
   created_at: PropTypes.string.isRequired,
 };
 
+
+
 function CourseItem({ course, onDeleteCourse }) {
   const navigate = useNavigate(); // Gunakan useNavigate untuk navigasi
 
-  const handleEditClick = () => {
-    navigate(`/courses/${course.id}/edit`); // Navigasi ke halaman edit kursus
+  const handleAccessCourse = async () => {
+    try {
+      //const response = await api.postAddStudent({ id: course.id });
+      navigate(`/courses/${course.id}/contents`);
+    } catch (error) {
+      Swal.fire("Error", "Failed to access the course.", "error");
+    }
   };
+
 
   const handleAddStudentClick = () => {
     navigate(`/courses/${course.id}/add-student`); // Navigasi ke halaman add student
@@ -71,6 +79,14 @@ function CourseItem({ course, onDeleteCourse }) {
             onClick={handleAddStudentClick}
           >
             <FaUserPlus /> Add Student
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-success ms-2"
+            onClick={handleAccessCourse}
+          >
+            <FaUserPlus /> Access
           </button>
         </div>
       </div>

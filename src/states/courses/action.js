@@ -145,11 +145,11 @@ function changeContentStatusActionCreator(content) {
 }
 
 // Async Functions
-function asyncGetCourses(is_me) {
+function asyncGetCourses() {
   return async (dispatch) => {
     dispatch(showLoading());
     try {
-      const courses = await api.getAllCourses(is_me);
+      const courses = await api.getAllCourses();
       dispatch(getCoursesActionCreator(courses));
     } catch (error) {
       showErrorDialog(error.message);

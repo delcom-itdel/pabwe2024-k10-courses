@@ -70,40 +70,45 @@ function CourseDetail({ course, onEditCourse }) {
 
   return (
     <div className="card mt-3">
-      <div className="card-body">
-        {/* Cover Image */}
+      <div className="card-body" style={{backgroundColor:'#F0F5F7', color:'black'}}>
+        {/* Flexbox for Centering the Image */}
         <div
           style={{
-            width: "300px",
-            height: "300px",
-            position: "relative",
-            backgroundColor: "#f0f0f1",
-            marginBottom: "5px",
-            overflow: "hidden",
+            display: "flex",
+            justifyContent: "center", // Centers the image horizontally
+            marginBottom: "20px", // Add margin below the image
           }}
         >
-          {previewCover ? (
-            <img
-              src={previewCover}
-              alt="Cover"
-              style={{
-                borderRadius: "5px",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center",
-                position: "absolute",
-                top: "0",
-                left: "0",
-              }}
-            />
-          ) : (
-            <p>No cover image</p>
-          )}
+          {/* Cover Image */}
+          <div
+            style={{
+              width: "300px",
+              height: "300px",
+              position: "relative",
+              backgroundColor: "#f0f0f1",
+              overflow: "hidden",
+            }}
+          >
+            {previewCover ? (
+              <img
+                src={previewCover}
+                alt="Cover"
+                style={{
+                  borderRadius: "5px",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+              />
+            ) : (
+              <p>No cover image</p>
+            )}
+          </div>
         </div>
 
         {/* Course Details */}
-        <div className="row align-items-center">
+        <div className="row align-items-center " >
           <div className="col-12">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
@@ -113,8 +118,14 @@ function CourseDetail({ course, onEditCourse }) {
               <div>
                 {/* Update Cover Button */}
                 <button
-                  className="btn btn-outline-primary me-2"
+                  className="btn me-2"
                   onClick={handleUploadClick}
+                  style={{
+                    borderColor: 'black', 
+                    borderWidth: '3px',
+                    color: '#F0F5F7', 
+                    backgroundColor: '#577877'
+                  }}
                 >
                   <FaUpload /> {isUploading ? "Uploading..." : "Update Cover"}
                 </button>
@@ -131,7 +142,16 @@ function CourseDetail({ course, onEditCourse }) {
                 <button
                   type="button"
                   onClick={() => setIsEditing((prevState) => !prevState)}
-                  className="btn btn-sm btn-outline-warning"
+                  className="btn btn-sm "
+                  style={{
+                    borderColor: 'black', 
+                    borderWidth: '3px',
+                    color: '#F0F5F7', 
+                    backgroundColor: '#577877',
+                    padding:'7px',
+                    paddingRight:'10px',
+                    paddingLeft:'10px'
+                  }}
                 >
                   <FaPenToSquare /> {isEditing ? "Cancel Edit" : "Edit"}
                 </button>

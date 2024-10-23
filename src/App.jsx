@@ -13,6 +13,10 @@ import ProfilePage from "./pages/ProfilePage";
 import CourseAddPage from "./pages/CourseAddPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import AddStudentPage from "./pages/AddStudentPage"; // Import AddStudentPage
+import AddContentForm from "./pages/AddContentForm";
+import StudentList from "./components/StudentList";
+import ContentDetail from "./components/ContentDetail";
+
 
 function App() {
   const { authLogin = null, isPreload = false } = useSelector(
@@ -87,6 +91,9 @@ function App() {
             <Route path="/users/me" element={<ProfilePage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route path="/courses/add" element={<CourseAddPage />} />
+            <Route path="/courses/:id/students" element={<StudentList />} />
+            <Route path="/courses/:id/contents" element={<AddContentForm />} />
+            <Route path="/courses/-/contents/:id" element={<ContentDetail/>}/>
             <Route
               path="/courses/:id/add-student"
               element={<AddStudentPage />}
